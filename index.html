@@ -4,335 +4,279 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The0xKa1</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="./css/modernAnti.css" rel="stylesheet">
-    <link href="./css/GreatVibes.css" rel="stylesheet">
-    <link href="./css/ZCOOL.css" rel="stylesheet">
-     <link href="./css/Zheng.css" rel="stylesheet">
-    <script src="./vivus.min.js"></script>
+    
+    <!-- Tailwind CSS (via CDN for instant styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Fallback) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Your Custom Fonts -->
+    <link rel="stylesheet" href="./css/modernAnti.css">
+    <link rel="stylesheet" href="./css/Zheng.css">
+    <link rel="stylesheet" href="./css/ZCOOL.css">
+    <link rel="stylesheet" href="./css/GreatVibes.css">
+
+    <!-- Configuration for Tailwind to use your custom fonts if they load -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Poppins', 'ui-sans-serif', 'system-ui'],
+                        'serif': ['"Noto Serif SC"', 'ui-serif', 'Georgia'],
+                        'custom': ['"Great Vibes"', 'cursive'], // Assuming GreatVibes is one of them
+                    },
+                    animation: {
+                        'fade-in-down': 'fadeInDown 1s ease-out',
+                        'fade-in-up': 'fadeInUp 1s ease-out',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeInDown: {
+                            '0%': { opacity: '0', transform: 'translateY(-20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
+        /* Custom Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
         
-        body {
-            font-family: "Arial", "Ma Shan Zheng", sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f4f4f9;
-            background-image: url('bg-light.png');
-            background-size: cover;
-            transition: background-color 0.3s, color 0.3s, background-image 0.3s;
-        }
-        body.dark-mode {
-            background-color: rgba(0, 0, 0, 0.895);
-            color: #cacadf;
-            background-image: url('bg-dark.png');
-            background-size: cover;
-        }
-        .theme-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: transparent;
-            color: #0073e6;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: color 0.3s,transform 0.3s;
-        }
-        .theme-toggle.dark-mode {
-            color: #f4f4f9;
+        .glass-button {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
         }
 
-        .theme-toggle:hover{
-            transform: scale(1.2);
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
-        .card {
-            position: relative;
-            width: 800px; /* Reduced width */
-            height: 400px; /* Reduced height */
-            perspective: 1000px;
-        }
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            background-color: #fff;
-            transition: background-color 0.3s, color 0.3s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
-            background-color: rgba(58, 198, 245, 0.219);
-            box-shadow: rgba(0, 0, 0, 0.3) 2px 8px 8px;
-            border: 2px rgba(255,255,255,0.4) solid;
-            border-bottom: 2px rgba(40,40,40,0.35) solid;
-            border-right: 2px rgba(40,40,40,0.35) solid;
-        }
-        .card-back {
-            transform: rotateY(180deg);
-        }
-        body.dark-mode .card-front, body.dark-mode .card-back {
-            border: 2px rgba(236, 137, 7, 0.4) solid;
-            background-color: rgba(30, 33, 35, 0.75);
-            box-shadow: 0 7px 7px rgba(236, 137, 7, 0.4); /* White shadow in dark mode */
-        }
-        body.dark-mode .title,body.dark-mode .social-links a{
-            color: #ad8b73; 
-        }
-        body.dark-mode .description{
-            color: #e17f39; 
-        }
-        body.dark-mode .social-links a:hover{
-            color: #ff6347; 
-        }
-        body.dark-mode .cursor-dot{
-            background-color: #f3e5b6;
-        }
-        .title {
-            font-size: 1em; /* 调整大小 */
-            color: #333;
-            font-family: "Modern Antiqua", "ZCOOL KuaiLe", serif;
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-        }
-        .description {
-            color: #301f1f;
-            font-family: "Great Vibes", "Ma Shan Zheng", serif;
-            position: absolute;
-            top: 30%;
-            left: 10%;
-            width: 80%;
-        }
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-        }
-        .social-links a {
-            text-decoration: none;
-            color: #0073e6;
-            font-family: "JetBrains Mono", "ZCOOL KuaiLe", sans-serif;
-            font-size: 1.1em; /* Adjusted size */
-            transition: transform 0.2s, color 0.2s
-        }
-        .social-links a:hover {
-            transform: scale(1.3);
-            color: red;
-        }
-        .social-links a::after {
-            content: attr(data-description);
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #ffffff00;
-            color: #dad1d1;
-            padding: 5px 10px;
-            border-radius: 5px;
-            opacity: 0;
-            font-size: 0.5em;
-            transition: opacity 0.3s;
-            white-space: nowrap;
-            pointer-events: none;
-        }
-        .social-links a:hover::after {
-            opacity: 1;
-        }
-        .cursor-dot {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #b2d3f4;
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: background-color 0.2s;
-            opacity: 0.5; /* Added opacity */
-        }
-        .cursor-dot.broken {
-            animation: break 0.5s forwards;
-        }
-        .calligraphy {
-            font-family: 'Great Vibes', cursive;
-            font-size: 48px;
-            fill: black;
-        }
-        @keyframes break {
-            0% {
-                opacity: 0.5;
-                transform: translate(-50%, -50%) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(2);
-            }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #e2e8f0, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center overflow-hidden font-serif selection:bg-pink-500 selection:text-white">
+
+    <!-- Theme Toggle Button -->
+    <button id="theme-btn" class="fixed top-6 right-6 z-50 glass-button p-3 rounded-full text-white hover:text-yellow-300 transition-colors">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Background Image Layer -->
+    <div class="fixed inset-0 z-0">
+        <img id="bg-img" src="./bg-dark.png" alt="Background" class="w-full h-full object-cover opacity-60">
+        <div id="bg-overlay" class="absolute inset-0 bg-gradient-to-b from-gray-900/50 to-gray-900/90"></div>
+    </div>
+
+    <main class="relative z-10 w-full max-w-4xl px-4 py-12 flex flex-col items-center">
+        <div class="glass-panel rounded-3xl p-8 md:p-12 w-full max-w-2xl text-center animate-fade-in-up relative overflow-hidden group">
+            
+            <div class="absolute -top-20 -left-20 w-40 h-40 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow"></div>
+            <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow" style="animation-delay: 2s;"></div>
+
+            <div class="relative inline-block mb-8">
+                <div class="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full blur opacity-50 group-hover:opacity-75 transition duration-500"></div>
+                <img src="./logo.png" alt="Logo" class="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white/10 object-cover shadow-2xl transform transition duration-500 group-hover:scale-105">
+            </div>
+
+
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight text-gradient font-custom">
+                The0xKa1
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Hello! I am The0xKa1, currently a sophomore at Zhejiang University, Turing Class. My major is Computer Science and Technology. I enjoy playing basketball, watching movies, and listening to music.
+            </p>
+            
+            <div class="h-24 w-full flex justify-center items-center mb-8 relative">
+                <div class="absolute inset-0 bg-blue-500/10 blur-2xl rounded-full transform scale-75"></div>    
+                <svg id="signature-anim" height="80" width="350" viewBox="0 0 350 80" xmlns="http://www.w3.org/2000/svg" class="relative z-10 overflow-visible">
+                    <defs>
+                        <linearGradient id="pulse-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#22d3ee;stop-opacity:1" /> <!-- Cyan -->
+                            <stop offset="50%" style="stop-color:#818cf8;stop-opacity:1" /> <!-- Indigo -->
+                            <stop offset="100%" style="stop-color:#d946ef;stop-opacity:1" /> <!-- Fuchsia -->
+                        </linearGradient>
+                        
+                        <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <path d="M20,15 L5,15 L5,65 L20,65" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-linecap="square" />
+                    <path d="M330,15 L345,15 L345,65 L330,65" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-linecap="square" />
+
+                    <path d="M25,40 L45,40 L55,20 L65,60 L75,40 L105,40 L115,10 L125,70 L135,40 L175,40 L185,25 L195,55 L205,40 L255,40 L265,5 L275,75 L285,40 L325,40" 
+                          stroke="url(#pulse-grad)" 
+                          stroke-width="3" 
+                          fill="none" 
+                          stroke-linecap="round" 
+                          stroke-linejoin="round" 
+                          filter="url(#neon-glow)" />
+                </svg>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="https://note.the0xka1.cc/" target="_blank" class="glass-button px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-all duration-300">
+                    <i class="fas fa-pen text-pink-400"></i>
+                    <span>Note</span>
+                </a>
+                
+                <a href="https://github.com/The0xKa1" target="_blank" class="glass-button px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-all duration-300">
+                    <i class="fab fa-github text-white"></i>
+                    <span>GitHub</span>
+                </a>
+
+                <a href="https://space.bilibili.com/398610279" target="_blank" class="glass-button px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-all duration-300">
+                    <i class="fab fa-bilibili text-blue-400"></i>
+                    <span>Bilibili</span>
+                </a>
+
+                <a href="mailto:sadk80727@gmail.com" class="glass-button px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-all duration-300">
+                    <i class="fas fa-envelope text-yellow-400"></i>
+                    <span>Email</span>
+                </a>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-white/10 text-sm text-gray-500">
+                <p>&copy; 2026 The0xKa1. All rights reserved.</p>
+            </div>
+        </div>
+
+    </main>
+
+
+    <script src="./vivus.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const card = document.querySelector('.card-inner');
-            const cursorDot = document.createElement('div');
-            cursorDot.classList.add('cursor-dot');
-            document.body.appendChild(cursorDot);
-
-            let mouseX = 0, mouseY = 0;
-            let dotX = 0, dotY = 0;
-
-            card.addEventListener('mousemove', function(event) {
-                mouseX = event.pageX;
-                mouseY = event.pageY;
-            });
-
-            card.addEventListener('mouseenter', function() {
-                cursorDot.style.display = 'block';
-            });
-
-            card.addEventListener('mouseleave', function() {
-                cursorDot.style.display = 'none';
-            });
-
-            function animateDot() {
-                dotX += (mouseX - dotX) * 0.1;
-                dotY += (mouseY - dotY) * 0.1;
-                cursorDot.style.left = dotX + 'px';
-                cursorDot.style.top = dotY + 'px';
-                requestAnimationFrame(animateDot);
-            }
-
-            animateDot();
-
-            let isDragging = false;
-
-            card.addEventListener('mousedown', function() {
-                isDragging = true;
-                cursorDot.classList.add('broken');
-                setTimeout(() => {
-                    cursorDot.classList.remove('broken');
-                }, 500);
-            });
-
-            document.addEventListener('mouseup', function() {
-                if (isDragging) {
-                    card.style.transform = card.style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
-                    isDragging = false;
+        document.addEventListener('DOMContentLoaded', function () {
+            // Animate the signature line
+            new Vivus('signature-anim', {
+                type: 'oneByOne',
+                duration: 150,
+                animTimingFunction: Vivus.EASE
+            }, function (myVivus) {
+                if (myVivus.getStatus() === 'end') {
+                    setTimeout(() => {
+                        myVivus.reset().play();
+                    }, 3000);
                 }
             });
 
-            document.addEventListener('mousemove', function(event) {
-                if (isDragging) {
-                    event.preventDefault(); // Prevent text selection
+       
+            // Theme Toggle Logic
+            const themeBtn = document.getElementById('theme-btn');
+            const bgImg = document.getElementById('bg-img');
+            const bgOverlay = document.getElementById('bg-overlay');
+            const body = document.body;
+            const glassPanel = document.querySelector('.glass-panel');
+            const paragraphs = document.querySelectorAll('p');
+            const signaturePaths = document.querySelectorAll('#signature-anim path:not([stroke^="url"])');
+            const footer = document.querySelector('.border-t');
+            const githubIcon = document.querySelector('.fa-github');
+
+            let isDark = true;
+
+            themeBtn.addEventListener('click', () => {
+                isDark = !isDark;
+                
+                if (isDark) {
+                    // Switch to Dark Mode
+                    bgImg.src = './bg-dark.png';
+                    
+                    body.classList.remove('bg-gray-100', 'text-gray-900');
+                    body.classList.add('bg-gray-900', 'text-white');
+                    
+                    bgOverlay.classList.remove('from-white/50', 'to-white/90');
+                    bgOverlay.classList.add('from-gray-900/50', 'to-gray-900/90');
+                    
+                    glassPanel.style.background = 'rgba(255, 255, 255, 0.05)';
+                    glassPanel.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                    
+                    themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                    themeBtn.classList.add('text-white');
+                    themeBtn.classList.remove('text-gray-800');
+
+                    if (githubIcon) {
+                        githubIcon.classList.remove('text-gray-900');
+                        githubIcon.classList.add('text-white');
+                    }
+
+                    paragraphs.forEach(p => {
+                        p.classList.remove('text-gray-600');
+                        p.classList.add('text-gray-300');
+                    });
+                    
+                    if (footer) footer.classList.replace('border-gray-300', 'border-white/10');
+                    
+                    signaturePaths.forEach(path => {
+                        path.setAttribute('stroke', 'rgba(255,255,255,0.3)');
+                    });
+                    
+                } else {
+                    // Switch to Light Mode
+                    bgImg.src = './bg-light.png';
+                    
+                    body.classList.remove('bg-gray-900', 'text-white');
+                    body.classList.add('bg-gray-100', 'text-gray-900');
+                    
+                    bgOverlay.classList.remove('from-gray-900/50', 'to-gray-900/90');
+                    bgOverlay.classList.add('from-white/50', 'to-white/90');
+                    
+                    glassPanel.style.background = 'rgba(255, 255, 255, 0.6)';
+                    glassPanel.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+                    
+                    themeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                    themeBtn.classList.remove('text-white');
+                    themeBtn.classList.add('text-gray-800');
+
+                    if (githubIcon) {
+                        githubIcon.classList.remove('text-white');
+                        githubIcon.classList.add('text-gray-900');
+                    }
+
+                    paragraphs.forEach(p => {
+                        p.classList.remove('text-gray-300');
+                        p.classList.add('text-gray-600');
+                    });
+                    
+                    if (footer) footer.classList.replace('border-white/10', 'border-gray-300');
+                    
+                    signaturePaths.forEach(path => {
+                        path.setAttribute('stroke', 'rgba(0,0,0,0.3)');
+                    });
                 }
-            });
-
-            const themeToggle = document.createElement('button');
-            themeToggle.classList.add('theme-toggle');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            document.querySelector('.card-inner').appendChild(themeToggle);
-
-            themeToggle.addEventListener('click', function() {
-                document.body.classList.toggle('dark-mode');
-                themeToggle.classList.toggle('dark-mode');
-                themeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
             });
         });
     </script>
-</head>
-<body>
-    <div style="position: absolute; top: 0; left: 0;">
-    <svg
-    width="150"
-    height="160"
-    viewBox="0 0 595.28 841.89"
-    id="svg1"
-    xmlns="http://www.w3.org/2000/svg">
-    <path fill="none" stroke="white" stroke-width="11" d="M201.43,241.13c-4.03,2.7-9.88.23-12.42-3.9s-2.62-9.27-2.45-14.12c.08-2.31.24-4.74,1.47-6.69.77-1.22,1.9-2.15,3.05-3.01,14.09-10.39,33.04-10.01,50.27-13.11,13.27-2.38,26.12-7.07,37.8-13.8,2.72-1.57,5.78-4.2,4.86-7.21-4.6.42-9.32,1.55-12.88,4.5-4.68,3.87-6.54,10.11-8.17,15.97-12.86,46.3-26.59,93.09-51.89,133.94-4.55,7.35-9.56,14.58-16.26,20.04s-15.36,9.01-23.94,7.97c-4.17-.5-9.11-3.8-7.7-7.76,2.82.21,5.7-1.05,7.46-3.26"/>
-    <path fill="none" stroke="white" stroke-width="11"  d="M301.76,231.93c-14.47,23.71-40.79,39.77-68.49,41.79,4.26-.91,8.32,1.93,11.75,4.61,13.9,10.86,27.8,21.72,41.69,32.58,14.42,11.27,29.38,22.81,47.09,27.41,14.16,3.68,29.19,2.62,43.46-.59"/>
-    <path fill="none" stroke="white" stroke-width="11"  d="M341.02,257.45c-12.37-4.68-27.29-1.75-36.97,7.26-2.89,2.69-5.32,5.85-7.55,9.11-5.6,8.16-10.22,17.79-8.96,27.6.99,7.7,5.79,14.81,12.56,18.61s15.34,4.19,22.43,1.03c14.23-6.35,19.16-23.59,27.74-36.6,1.61-2.44,3.45-4.92,3.74-7.83s-1.78-6.28-4.7-6.12c1.19,8.59-1.8,17.13-3.92,25.54-1.16,4.61-1.93,9.94.94,13.72,2.24,2.95,6.21,4.12,9.92,4.04,9.98-.22,18.13-7.87,24.38-15.66,5.97-7.44,11.21-15.45,15.62-23.91,1.18-2.26,2.17-5.38.26-7.08-3.1,13.1-5.72,26.32-7.83,39.62-.27,1.7-.51,3.56.35,5.06.57.99,1.55,1.68,2.57,2.2,5.87,3,13.89.66,17.23-5.02"/>
-    <path fill="none" stroke="white" stroke-width="11"  d="M385.82,244.86c2.63,1.59,5.29,3.21,7.41,5.43s3.67,5.16,3.58,8.23c-.72.55-1.84-.07-2.13-.92s-.01-1.79.26-2.66c4.2-1.27"/>
-    
-    </svg>
-        <script>
-          const myVivus = new Vivus('svg1', {
-            type: 'oneByOne', // 选择动画类型
-            duration: 200,   // 设置动画持续时间
-            start: 'autostart' // 自动开始动画
-        }, function() {
-            setTimeout(() => {
-                this.el.style.display = 'none'; // 动画结束后隐藏
-                this.el.style.display = 'block'; // 两秒后重新显示
-                this.reset().play(1); 
-            }, 3000);
-        });
-         </script>
-     </div>
-    <div class="card">
-        <div class="card-inner">
-            <div class="card-front">
-                <div class="title">欢迎来到我的主页</div>
-                <div class="description">
-                    你好！我是The0xKa1,目前在浙江大学图灵班就读,我的专业是计算机科学与技术
-                    我喜欢打篮球,喜欢电影,喜欢音乐,也享受计算机这门学科带给我的乐趣
-                    <p style="font-family: 'JetBrains Mono', 'Ma Shan Zheng', monospace; color: inherit;">我对前端知之甚少,这个页面使用简单的HTML+CSS+JS实现,如果您有好的建议,欢迎联系我</p>
-                </div>
-                <div class="social-links">
-                    <a href="https://note.kailqq.cc/" target="_blank" class="note" data-description="Note"><i class="fas fa-pen"></i> </a>
-                    <a href="https://github.com/Kailqq" target="_blank" data-description="GitHub"><i class="fab fa-github"></i> </a>
-                    <a href="https://space.bilibili.com/398610279" target="_blank" data-description="Bilibili"><i class="fab fa-bilibili"></i> </a>
-                    <a href="mailto:kailqq0851@gmail.com" data-description="Email"><i class="fas fa-envelope"></i></a>
-                </div>
-            </div>
-            <div class="card-back">
-                <div class="title">Welcome to My Homepage</div>
-                <div class="description" style="font-size: larger;">
-                    Hello! I am The0xKa1, currently a sophomore at Zhejiang University, Turing Class. My major is Computer Science and Technology. I enjoy playing basketball, watching movies, listening to music, and I would be very happy to be friends with you.
-                </div>
-                <div class="social-links">
-                    <a href="https://note.the0xka1.cc/" target="_blank" class="note" data-description="Note"><i class="fas fa-pen"></i></a>
-                    <a href="https://github.com/The0xKa1" target="_blank" data-description="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="https://space.bilibili.com/398610279" target="_blank" data-description="Bilibili"><i class="fab fa-bilibili"></i></a>
-                    <a href="mailto:sadk80727@gmail.com" data-description="Email"><i class="fas fa-envelope"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-   
-
-
-     <!-- <svg id="my-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-        <path stroke="red" fill="none" stroke-width="2" d="M10 10 H 90 V 90 H 10 L 10 10" />
-    </svg>
-
-    <script>
-        new Vivus('my-svg', {
-            type: 'oneByOne', // 动画类型
-            duration: 200   // 动画持续时间
-        });
-    </script> -->
-    
 </body>
 </html>
