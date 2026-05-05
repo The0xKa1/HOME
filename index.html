@@ -4,279 +4,838 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The0xKa1</title>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <!-- Tailwind CSS (via CDN for instant styling) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts (Fallback) -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-    <!-- Your Custom Fonts -->
+    <script>
+        (function () {
+            try {
+                const savedTheme = localStorage.getItem("preferred-theme");
+                document.documentElement.dataset.theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : "dark";
+            } catch (error) {
+                document.documentElement.dataset.theme = "dark";
+            }
+        })();
+    </script>
     <link rel="stylesheet" href="./css/modernAnti.css">
     <link rel="stylesheet" href="./css/Zheng.css">
     <link rel="stylesheet" href="./css/ZCOOL.css">
     <link rel="stylesheet" href="./css/GreatVibes.css">
+    <style>
+        :root {
+            --bg: #050505;
+            --text: #f7f7f3;
+            --muted: #b8b8b2;
+            --soft: rgba(247, 247, 243, 0.72);
+            --line: rgba(247, 247, 243, 0.16);
+            --line-strong: rgba(247, 247, 243, 0.36);
+            --panel: rgba(8, 8, 8, 0.78);
+            --grid-line-x: rgba(255, 255, 255, 0.04);
+            --grid-line-y: rgba(255, 255, 255, 0.035);
+            --bg-overlay: linear-gradient(180deg, rgba(5, 5, 5, 0.16), rgba(5, 5, 5, 0.84));
+            --bg-filter: grayscale(1) contrast(1.18) brightness(0.38);
+            --bg-opacity: 0.74;
+            --base-bg-image: url("./bg-dark.png");
+            --reveal-bg-image: url("./bg-light.png");
+            --cursor-x: 50vw;
+            --cursor-y: 50vh;
+            --reveal-size: clamp(140px, 16vw, 240px);
+            --photo-filter: grayscale(1) contrast(1.18) brightness(0.9);
+            --photo-shade:
+                linear-gradient(180deg, transparent 0%, rgba(5, 5, 5, 0.14) 42%, rgba(5, 5, 5, 0.86) 100%),
+                linear-gradient(90deg, rgba(5, 5, 5, 0.42), transparent 48%);
+            --card-bg: rgba(255, 255, 255, 0.025);
+            --card-hover: rgba(255, 255, 255, 0.075);
+            --shadow: 0 34px 120px rgba(0, 0, 0, 0.56);
+            --signature-stroke: #f7f7f3;
+            --selection-bg: #f7f7f3;
+            --selection-text: #050505;
+            --ui-font: "Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            --display-font: "Modern Antiqua", "Cormorant Garamond", Georgia, serif;
+        }
 
-    <!-- Configuration for Tailwind to use your custom fonts if they load -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'sans': ['Poppins', 'ui-sans-serif', 'system-ui'],
-                        'serif': ['"Noto Serif SC"', 'ui-serif', 'Georgia'],
-                        'custom': ['"Great Vibes"', 'cursive'], // Assuming GreatVibes is one of them
-                    },
-                    animation: {
-                        'fade-in-down': 'fadeInDown 1s ease-out',
-                        'fade-in-up': 'fadeInUp 1s ease-out',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        fadeInDown: {
-                            '0%': { opacity: '0', transform: 'translateY(-20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    }
-                }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            background: var(--bg);
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            background: var(--bg);
+            font-family: var(--ui-font);
+            overflow-x: hidden;
+            transition: background 280ms ease, color 280ms ease;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f7f7f3;
+            --text: #060606;
+            --muted: #565650;
+            --soft: rgba(6, 6, 6, 0.72);
+            --line: rgba(6, 6, 6, 0.15);
+            --line-strong: rgba(6, 6, 6, 0.34);
+            --panel: rgba(247, 247, 243, 0.94);
+            --grid-line-x: rgba(0, 0, 0, 0.055);
+            --grid-line-y: rgba(0, 0, 0, 0.045);
+            --bg-overlay: linear-gradient(180deg, rgba(247, 247, 243, 0.72), rgba(247, 247, 243, 0.96));
+            --bg-filter: grayscale(1) contrast(1.02) brightness(1.28);
+            --bg-opacity: 0.16;
+            --base-bg-image: url("./bg-light.png");
+            --reveal-bg-image: url("./bg-dark.png");
+            --photo-filter: grayscale(1) contrast(1.08) brightness(1.08);
+            --card-bg: rgba(0, 0, 0, 0.025);
+            --card-hover: rgba(0, 0, 0, 0.07);
+            --shadow: 0 34px 120px rgba(0, 0, 0, 0.16);
+            --signature-stroke: #060606;
+            --selection-bg: #060606;
+            --selection-text: #f7f7f3;
+        }
+
+        ::selection {
+            color: var(--selection-text);
+            background: var(--selection-bg);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 40px 22px;
+            isolation: isolate;
+        }
+
+        .background-stage,
+        .background-base,
+        .background-reveal {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .background-stage {
+            z-index: 0;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        .background-stage::after {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            content: "";
+            background:
+                linear-gradient(90deg, var(--grid-line-x) 1px, transparent 1px),
+                linear-gradient(0deg, var(--grid-line-y) 1px, transparent 1px);
+            background-size: 72px 72px;
+            mask-image: radial-gradient(circle at center, black 0, transparent 72%);
+        }
+
+        .background-base,
+        .background-reveal {
+            z-index: 1;
+            background:
+                var(--bg-overlay),
+                var(--base-bg-image) center / cover;
+            filter: var(--bg-filter);
+            opacity: var(--bg-opacity);
+            transition: filter 280ms ease, opacity 280ms ease;
+        }
+
+        .background-reveal {
+            z-index: 2;
+            background:
+                var(--bg-overlay),
+                var(--reveal-bg-image) center / cover;
+            clip-path: circle(var(--reveal-size) at var(--cursor-x) var(--cursor-y));
+            opacity: 0;
+            transition: opacity 280ms ease, filter 280ms ease, clip-path 520ms cubic-bezier(0.19, 1, 0.22, 1);
+            will-change: clip-path;
+        }
+
+        body.cursor-ready .background-reveal {
+            opacity: calc(var(--bg-opacity) + 0.2);
+        }
+
+        body.cursor-over-clickable .background-reveal {
+            opacity: 0;
+            transition: opacity 420ms ease;
+        }
+
+        body.card-collapsed.cursor-over-clickable .background-reveal {
+            clip-path: circle(clamp(72px, 8vw, 124px) at var(--cursor-x) var(--cursor-y));
+            opacity: 1;
+            transition: opacity 260ms ease, clip-path 560ms cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .theme-toggle,
+        .view-toggle {
+            position: fixed;
+            right: 24px;
+            z-index: 30;
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--line-strong);
+            border-radius: 50%;
+            color: var(--text);
+            background: var(--panel);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+        }
+
+        .theme-toggle {
+            top: 24px;
+        }
+
+        .view-toggle {
+            top: 82px;
+        }
+
+        .theme-toggle:hover,
+        .theme-toggle:focus-visible,
+        .view-toggle:hover,
+        .view-toggle:focus-visible {
+            transform: translateY(-2px);
+            border-color: var(--text);
+            outline: none;
+        }
+
+        .theme-toggle::before {
+            position: relative;
+            z-index: 1;
+            width: 20px;
+            height: 20px;
+            content: "";
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            background: linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+        }
+
+        .view-toggle::before {
+            position: relative;
+            z-index: 1;
+            width: 20px;
+            height: 14px;
+            content: "";
+            border: 1px solid currentColor;
+            box-shadow: inset 0 0 0 3px var(--panel);
+        }
+
+        .theme-toggle::after,
+        .view-toggle::after,
+        .link-card::before {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            content: "";
+            background: var(--text);
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 360ms ease 80ms, transform 420ms cubic-bezier(0.19, 1, 0.22, 1) 80ms;
+            will-change: opacity, transform;
+        }
+
+        .theme-toggle.is-invert-target::after,
+        .theme-toggle:focus-visible::after,
+        .view-toggle.is-invert-target::after,
+        .view-toggle:focus-visible::after,
+        .link-card.is-invert-target::before,
+        .link-card:focus-visible::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .theme-toggle.is-invert-target,
+        .theme-toggle:focus-visible,
+        .view-toggle.is-invert-target,
+        .view-toggle:focus-visible,
+        .link-card.is-invert-target,
+        .link-card:focus-visible {
+            color: var(--bg);
+        }
+
+        .shell {
+            width: min(1080px, 100%);
+            min-height: min(720px, calc(100vh - 80px));
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(300px, 1.08fr);
+            border: 1px solid var(--line);
+            background: var(--panel);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            box-shadow: var(--shadow);
+            transition:
+                opacity 520ms cubic-bezier(0.19, 1, 0.22, 1),
+                transform 620ms cubic-bezier(0.19, 1, 0.22, 1),
+                filter 520ms ease,
+                background 280ms ease,
+                border-color 280ms ease,
+                box-shadow 280ms ease;
+        }
+
+        body.card-collapsed .shell {
+            opacity: 0;
+            transform: scale(0.76);
+            pointer-events: none;
+            filter: blur(8px);
+        }
+
+        body.card-collapsed .background-base,
+        body.card-collapsed .background-reveal {
+            background-image: var(--base-bg-image);
+            filter: none;
+            opacity: 1;
+        }
+
+        body.card-collapsed .background-reveal {
+            background-image: var(--reveal-bg-image);
+        }
+
+        body.card-collapsed .background-stage::after {
+            opacity: 0;
+        }
+
+        body.card-collapsed .cursor-invert {
+            opacity: 0;
+            transform: translate3d(-50%, -50%, 0) scale(0.72);
+        }
+
+        .portrait-panel {
+            position: relative;
+            min-height: 560px;
+            padding: 34px;
+            border-right: 1px solid var(--line);
+            overflow: hidden;
+        }
+
+        .portrait-panel::before {
+            position: absolute;
+            inset: 34px;
+            content: "";
+            border: 1px solid var(--line);
+            pointer-events: none;
+        }
+
+        .portrait-wrap {
+            position: relative;
+            height: 100%;
+            min-height: 492px;
+        }
+
+        .portrait {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: var(--photo-filter);
+            transition: filter 280ms ease;
+        }
+
+        .portrait-shade {
+            position: absolute;
+            inset: 0;
+            background: var(--photo-shade);
+        }
+
+        .mark {
+            position: absolute;
+            left: 26px;
+            bottom: 24px;
+            display: grid;
+            gap: 6px;
+            color: #f7f7f3;
+        }
+
+        .mark span:first-child {
+            font-size: 12px;
+            letter-spacing: 0.34em;
+            text-transform: uppercase;
+            color: rgba(247, 247, 243, 0.68);
+        }
+
+        .mark span:last-child {
+            font-size: clamp(44px, 6vw, 78px);
+            line-height: 0.9;
+            font-family: "Great Vibes", "Modern Antiqua", cursive;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 42px;
+            padding: clamp(34px, 5vw, 68px);
+        }
+
+        .topline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            color: var(--muted);
+            font-family: var(--ui-font);
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .topline::after {
+            width: min(150px, 24vw);
+            height: 1px;
+            content: "";
+            background: var(--line-strong);
+        }
+
+        .hero {
+            max-width: 620px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(54px, 8vw, 96px);
+            font-weight: 400;
+            line-height: 0.9;
+            letter-spacing: 0;
+            font-family: var(--display-font);
+        }
+
+        .intro {
+            max-width: 580px;
+            margin: 30px 0 0;
+            color: var(--soft);
+            font-family: var(--ui-font);
+            font-size: clamp(16px, 2vw, 19px);
+            font-weight: 400;
+            line-height: 1.84;
+        }
+
+        .signature {
+            width: min(100%, 430px);
+            margin: 44px 0 0;
+        }
+
+        .signature svg {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        .links {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .link-card {
+            position: relative;
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 18px 20px;
+            border: 1px solid var(--line);
+            color: var(--text);
+            background: var(--card-bg);
+            overflow: hidden;
+            transition: border-color 220ms ease, background 220ms ease, transform 220ms ease;
+        }
+
+        .link-card:hover,
+        .link-card:focus-visible {
+            border-color: var(--text);
+            background: var(--card-hover);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .link-card span:first-child {
+            position: relative;
+            z-index: 1;
+            font-family: var(--ui-font);
+            font-size: 13px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .link-card span:last-child {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            width: 26px;
+            height: 26px;
+            place-items: center;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            font-family: var(--ui-font);
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding-top: 28px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--ui-font);
+            font-size: 12px;
+            letter-spacing: 0.1em;
+        }
+
+        .cursor-invert {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 40;
+            width: clamp(140px, 16vw, 240px);
+            height: clamp(140px, 16vw, 240px);
+            border-radius: 50%;
+            background: #ffffff;
+            mix-blend-mode: difference;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate3d(-50%, -50%, 0) scale(0.84);
+            transition: opacity 280ms ease, transform 420ms cubic-bezier(0.19, 1, 0.22, 1);
+            will-change: transform;
+        }
+
+        body.cursor-ready .cursor-invert {
+            opacity: 0.9;
+            transform: translate3d(-50%, -50%, 0) scale(1);
+        }
+
+        body.cursor-over-clickable .cursor-invert {
+            opacity: 0;
+            transform: translate3d(-50%, -50%, 0) scale(0.46);
+            transition: opacity 420ms ease, transform 520ms cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .cursor-label {
+            position: fixed;
+            left: var(--cursor-x);
+            top: var(--cursor-y);
+            z-index: 41;
+            min-width: max-content;
+            display: grid;
+            place-items: center;
+            color: #f7f7f3;
+            text-shadow: 0 2px 18px rgba(0, 0, 0, 0.52);
+            font-family: var(--display-font);
+            font-size: clamp(22px, 2.3vw, 38px);
+            letter-spacing: 0;
+            line-height: 1;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate3d(-50%, -50%, 0) scale(0.86);
+            transition: opacity 280ms ease, transform 420ms cubic-bezier(0.19, 1, 0.22, 1);
+            will-change: left, top, opacity, transform;
+        }
+
+        body.card-collapsed.cursor-ready:not(.cursor-over-clickable) .cursor-label {
+            opacity: 1;
+            transform: translate3d(-50%, -50%, 0) scale(1);
+        }
+
+        body.card-collapsed.cursor-ready.cursor-over-clickable .cursor-label {
+            opacity: 0.82;
+            transform: translate3d(-50%, -50%, 0) scale(0.92);
+        }
+
+        body.card-collapsed.cursor-ready .cursor-invert,
+        body.card-collapsed.cursor-over-clickable .cursor-invert {
+            opacity: 0;
+            transform: translate3d(-50%, -50%, 0) scale(0.42);
+        }
+
+        @media (max-width: 820px) {
+            .page {
+                display: block;
+                padding: 16px;
+            }
+
+            .shell {
+                min-height: auto;
+                grid-template-columns: 1fr;
+            }
+
+            .portrait-panel {
+                min-height: 360px;
+                padding: 18px;
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .portrait-panel::before {
+                inset: 18px;
+            }
+
+            .portrait-wrap {
+                min-height: 324px;
+            }
+
+            .content {
+                padding: 32px 24px 28px;
+            }
+
+            .topline {
+                align-items: flex-start;
+            }
+
+            .topline::after {
+                width: 72px;
+                margin-top: 7px;
+            }
+
+            .intro {
+                margin-top: 24px;
+            }
+
+            .signature {
+                margin-top: 34px;
+            }
+
+            .theme-toggle {
+                top: 18px;
+                right: 18px;
+                width: 42px;
+                height: 42px;
+            }
+
+            .view-toggle {
+                top: 70px;
+                right: 18px;
+                width: 42px;
+                height: 42px;
             }
         }
-    </script>
 
-    <style>
-        /* Custom Glassmorphism Utilities */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .glass-button {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
+        @media (max-width: 560px) {
+            .page {
+                padding: 0;
+            }
+
+            .shell {
+                border-left: 0;
+                border-right: 0;
+            }
+
+            .portrait-panel {
+                min-height: 280px;
+            }
+
+            .portrait-wrap {
+                min-height: 244px;
+            }
+
+            .links {
+                grid-template-columns: 1fr;
+            }
+
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
-        .glass-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        @media (hover: none), (pointer: coarse) {
+            .cursor-invert,
+            .cursor-label {
+                display: none;
+            }
         }
 
-        /* Gradient Text */
-        .text-gradient {
-            background: linear-gradient(to right, #e2e8f0, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center overflow-hidden font-serif selection:bg-pink-500 selection:text-white">
-
-    <!-- Theme Toggle Button -->
-    <button id="theme-btn" class="fixed top-6 right-6 z-50 glass-button p-3 rounded-full text-white hover:text-yellow-300 transition-colors">
-        <i class="fas fa-sun"></i>
-    </button>
-
-    <!-- Background Image Layer -->
-    <div class="fixed inset-0 z-0">
-        <img id="bg-img" src="./bg-dark.png" alt="Background" class="w-full h-full object-cover opacity-60">
-        <div id="bg-overlay" class="absolute inset-0 bg-gradient-to-b from-gray-900/50 to-gray-900/90"></div>
+<body>
+    <div class="background-stage" aria-hidden="true">
+        <div class="background-base"></div>
+        <div class="background-reveal"></div>
     </div>
+    <button class="theme-toggle" type="button" aria-label="切换为白色主题" title="切换主题"></button>
+    <button class="view-toggle" type="button" aria-label="隐藏个人信息卡片" title="显示/隐藏信息卡"></button>
+    <div class="cursor-invert" aria-hidden="true"></div>
+    <div class="cursor-label" aria-hidden="true">The0xKa1</div>
 
-    <main class="relative z-10 w-full max-w-4xl px-4 py-12 flex flex-col items-center">
-        <div class="glass-panel rounded-3xl p-8 md:p-12 w-full max-w-2xl text-center animate-fade-in-up relative overflow-hidden group">
-            
-            <div class="absolute -top-20 -left-20 w-40 h-40 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow"></div>
-            <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow" style="animation-delay: 2s;"></div>
+    <main class="page">
+        <section class="shell" aria-label="The0xKa1 profile">
+            <aside class="portrait-panel" aria-hidden="true">
+                <div class="portrait-wrap">
+                    <img src="./logo.png" alt="" class="portrait">
+                    <div class="portrait-shade"></div>
+                    <div class="mark">
+                        <span>Personal Homepage</span>
+                        <span>Ka1</span>
+                    </div>
+                </div>
+            </aside>
 
-            <div class="relative inline-block mb-8">
-                <div class="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full blur opacity-50 group-hover:opacity-75 transition duration-500"></div>
-                <img src="./logo.png" alt="Logo" class="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white/10 object-cover shadow-2xl transform transition duration-500 group-hover:scale-105">
-            </div>
+            <section class="content">
+                <div class="hero">
+                    <div class="topline">
+                        <span>ZJU · Turing Class</span>
+                    </div>
 
+                    <h1>The0xKa1</h1>
 
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight text-gradient font-custom">
-                The0xKa1
-            </h1>
-            
-            <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Hello! I am The0xKa1, currently a sophomore at Zhejiang University, Turing Class. My major is Computer Science and Technology. I enjoy playing basketball, watching movies, and listening to music.
-            </p>
-            
-            <div class="h-24 w-full flex justify-center items-center mb-8 relative">
-                <div class="absolute inset-0 bg-blue-500/10 blur-2xl rounded-full transform scale-75"></div>    
-                <svg id="signature-anim" height="80" width="350" viewBox="0 0 350 80" xmlns="http://www.w3.org/2000/svg" class="relative z-10 overflow-visible">
-                    <defs>
-                        <linearGradient id="pulse-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#22d3ee;stop-opacity:1" /> <!-- Cyan -->
-                            <stop offset="50%" style="stop-color:#818cf8;stop-opacity:1" /> <!-- Indigo -->
-                            <stop offset="100%" style="stop-color:#d946ef;stop-opacity:1" /> <!-- Fuchsia -->
-                        </linearGradient>
-                        
-                        <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-                            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-                            <feMerge>
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                        </filter>
-                    </defs>
+                    <p class="intro">
+                        Hello! I am The0xKa1, currently a sophomore at Zhejiang University, Turing Class. My major is Computer Science and Technology. I enjoy playing basketball, watching movies, and listening to music.
+                    </p>
 
-                    <path d="M20,15 L5,15 L5,65 L20,65" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-linecap="square" />
-                    <path d="M330,15 L345,15 L345,65 L330,65" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none" stroke-linecap="square" />
+                    <div class="signature" aria-hidden="true">
+                        <svg id="signature-anim" height="80" width="430" viewBox="0 0 430 80" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18,15 L5,15 L5,65 L18,65" stroke="var(--line-strong)" stroke-width="1.5" fill="none" stroke-linecap="square" />
+                            <path d="M412,15 L425,15 L425,65 L412,65" stroke="var(--line-strong)" stroke-width="1.5" fill="none" stroke-linecap="square" />
+                            <path d="M28,40 L58,40 L70,20 L82,60 L94,40 L132,40 L144,10 L156,70 L168,40 L214,40 L226,25 L238,55 L250,40 L310,40 L322,5 L334,75 L346,40 L402,40"
+                                  stroke="var(--signature-stroke)"
+                                  stroke-width="2.6"
+                                  fill="none"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
 
-                    <path d="M25,40 L45,40 L55,20 L65,60 L75,40 L105,40 L115,10 L125,70 L135,40 L175,40 L185,25 L195,55 L205,40 L255,40 L265,5 L275,75 L285,40 L325,40" 
-                          stroke="url(#pulse-grad)" 
-                          stroke-width="3" 
-                          fill="none" 
-                          stroke-linecap="round" 
-                          stroke-linejoin="round" 
-                          filter="url(#neon-glow)" />
-                </svg>
-            </div>
+                <nav class="links" aria-label="Profile links">
+                    <a href="https://note.the0xka1.cc/" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <span>Note</span>
+                        <span aria-hidden="true">N</span>
+                    </a>
+                    <a href="https://github.com/The0xKa1" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <span>GitHub</span>
+                        <span aria-hidden="true">G</span>
+                    </a>
+                    <a href="https://space.bilibili.com/398610279" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <span>Bilibili</span>
+                        <span aria-hidden="true">B</span>
+                    </a>
+                    <a href="mailto:zhangjinkai.me@gmail.com" class="link-card">
+                        <span>Email</span>
+                        <span aria-hidden="true">@</span>
+                    </a>
+                </nav>
 
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="https://note.the0xka1.cc/" target="_blank" class="glass-button px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-all duration-300">
-                    <i class="fas fa-pen text-pink-400"></i>
-                    <span>Note</span>
-                </a>
-                
-                <a href="https://github.com/The0xKa1" target="_blank" class="glass-button px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-all duration-300">
-                    <i class="fab fa-github text-white"></i>
-                    <span>GitHub</span>
-                </a>
-
-                <a href="https://space.bilibili.com/398610279" target="_blank" class="glass-button px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-all duration-300">
-                    <i class="fab fa-bilibili text-blue-400"></i>
-                    <span>Bilibili</span>
-                </a>
-
-                <a href="mailto:sadk80727@gmail.com" class="glass-button px-6 py-3 rounded-full flex items-center gap-2 hover:bg-white/10 transition-all duration-300">
-                    <i class="fas fa-envelope text-yellow-400"></i>
-                    <span>Email</span>
-                </a>
-            </div>
-
-            <div class="mt-12 pt-8 border-t border-white/10 text-sm text-gray-500">
-                <p>&copy; 2026 The0xKa1. All rights reserved.</p>
-            </div>
-        </div>
-
+                <footer class="footer">
+                    <span>&copy; 2026 The0xKa1</span>
+                    <span>All rights reserved</span>
+                </footer>
+            </section>
+        </section>
     </main>
 
-
-    <script src="./vivus.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Animate the signature line
-            new Vivus('signature-anim', {
-                type: 'oneByOne',
-                duration: 150,
-                animTimingFunction: Vivus.EASE
-            }, function (myVivus) {
-                if (myVivus.getStatus() === 'end') {
-                    setTimeout(() => {
-                        myVivus.reset().play();
-                    }, 3000);
-                }
-            });
-
-       
-            // Theme Toggle Logic
-            const themeBtn = document.getElementById('theme-btn');
-            const bgImg = document.getElementById('bg-img');
-            const bgOverlay = document.getElementById('bg-overlay');
+        (function () {
             const body = document.body;
-            const glassPanel = document.querySelector('.glass-panel');
-            const paragraphs = document.querySelectorAll('p');
-            const signaturePaths = document.querySelectorAll('#signature-anim path:not([stroke^="url"])');
-            const footer = document.querySelector('.border-t');
-            const githubIcon = document.querySelector('.fa-github');
+            const root = document.documentElement;
+            const toggle = document.querySelector(".theme-toggle");
+            const viewToggle = document.querySelector(".view-toggle");
+            const cursor = document.querySelector(".cursor-invert");
+            const savedTheme = localStorage.getItem("preferred-theme");
+            const initialTheme = root.dataset.theme || (savedTheme === "light" || savedTheme === "dark" ? savedTheme : "dark");
+            const savedCardState = localStorage.getItem("card-collapsed");
+            let targetX = window.innerWidth / 2;
+            let targetY = window.innerHeight / 2;
+            let currentX = targetX;
+            let currentY = targetY;
+            let activeTarget = null;
 
-            let isDark = true;
+            function setTheme(theme) {
+                root.dataset.theme = theme;
+                localStorage.setItem("preferred-theme", theme);
+                toggle.setAttribute("aria-label", theme === "dark" ? "切换为白色主题" : "切换为黑色主题");
+            }
 
-            themeBtn.addEventListener('click', () => {
-                isDark = !isDark;
-                
-                if (isDark) {
-                    // Switch to Dark Mode
-                    bgImg.src = './bg-dark.png';
-                    
-                    body.classList.remove('bg-gray-100', 'text-gray-900');
-                    body.classList.add('bg-gray-900', 'text-white');
-                    
-                    bgOverlay.classList.remove('from-white/50', 'to-white/90');
-                    bgOverlay.classList.add('from-gray-900/50', 'to-gray-900/90');
-                    
-                    glassPanel.style.background = 'rgba(255, 255, 255, 0.05)';
-                    glassPanel.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                    
-                    themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
-                    themeBtn.classList.add('text-white');
-                    themeBtn.classList.remove('text-gray-800');
+            function setCardCollapsed(collapsed) {
+                body.classList.toggle("card-collapsed", collapsed);
+                localStorage.setItem("card-collapsed", collapsed ? "true" : "false");
+                viewToggle.setAttribute("aria-label", collapsed ? "显示个人信息卡片" : "隐藏个人信息卡片");
+            }
 
-                    if (githubIcon) {
-                        githubIcon.classList.remove('text-gray-900');
-                        githubIcon.classList.add('text-white');
-                    }
+            setTheme(initialTheme);
+            setCardCollapsed(savedCardState === "true");
 
-                    paragraphs.forEach(p => {
-                        p.classList.remove('text-gray-600');
-                        p.classList.add('text-gray-300');
-                    });
-                    
-                    if (footer) footer.classList.replace('border-gray-300', 'border-white/10');
-                    
-                    signaturePaths.forEach(path => {
-                        path.setAttribute('stroke', 'rgba(255,255,255,0.3)');
-                    });
-                    
-                } else {
-                    // Switch to Light Mode
-                    bgImg.src = './bg-light.png';
-                    
-                    body.classList.remove('bg-gray-900', 'text-white');
-                    body.classList.add('bg-gray-100', 'text-gray-900');
-                    
-                    bgOverlay.classList.remove('from-gray-900/50', 'to-gray-900/90');
-                    bgOverlay.classList.add('from-white/50', 'to-white/90');
-                    
-                    glassPanel.style.background = 'rgba(255, 255, 255, 0.6)';
-                    glassPanel.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-                    
-                    themeBtn.innerHTML = '<i class="fas fa-moon"></i>';
-                    themeBtn.classList.remove('text-white');
-                    themeBtn.classList.add('text-gray-800');
-
-                    if (githubIcon) {
-                        githubIcon.classList.remove('text-white');
-                        githubIcon.classList.add('text-gray-900');
-                    }
-
-                    paragraphs.forEach(p => {
-                        p.classList.remove('text-gray-300');
-                        p.classList.add('text-gray-600');
-                    });
-                    
-                    if (footer) footer.classList.replace('border-white/10', 'border-gray-300');
-                    
-                    signaturePaths.forEach(path => {
-                        path.setAttribute('stroke', 'rgba(0,0,0,0.3)');
-                    });
-                }
+            toggle.addEventListener("click", function () {
+                setTheme(root.dataset.theme === "dark" ? "light" : "dark");
             });
-        });
+
+            viewToggle.addEventListener("click", function () {
+                setCardCollapsed(!body.classList.contains("card-collapsed"));
+            });
+
+            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                window.addEventListener("pointermove", function (event) {
+                    targetX = event.clientX;
+                    targetY = event.clientY;
+                    body.classList.add("cursor-ready");
+
+                    const nextTarget = event.target.closest("a, button");
+
+                    if (nextTarget !== activeTarget) {
+                        if (activeTarget) {
+                            activeTarget.classList.remove("is-invert-target");
+                        }
+
+                        activeTarget = nextTarget;
+
+                        if (activeTarget) {
+                            activeTarget.classList.add("is-invert-target");
+                            body.classList.add("cursor-over-clickable");
+                        } else {
+                            body.classList.remove("cursor-over-clickable");
+                        }
+                    }
+                });
+
+                window.addEventListener("pointerleave", function () {
+                    body.classList.remove("cursor-ready");
+                    body.classList.remove("cursor-over-clickable");
+                    if (activeTarget) {
+                        activeTarget.classList.remove("is-invert-target");
+                        activeTarget = null;
+                    }
+                });
+
+                function renderCursor() {
+                    currentX += (targetX - currentX) * 0.16;
+                    currentY += (targetY - currentY) * 0.16;
+                    root.style.setProperty("--cursor-x", currentX + "px");
+                    root.style.setProperty("--cursor-y", currentY + "px");
+                    cursor.style.left = currentX + "px";
+                    cursor.style.top = currentY + "px";
+                    requestAnimationFrame(renderCursor);
+                }
+
+                renderCursor();
+            }
+        })();
     </script>
 </body>
 </html>
