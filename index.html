@@ -4,19 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The0xKa1</title>
+    <meta name="description" content="The0xKa1 — Zhejiang University Turing Class, Computer Science and Technology. Notes, projects and links.">
+    <meta property="og:title" content="The0xKa1">
+    <meta property="og:description" content="ZJU Turing Class · Computer Science — notes, projects and links.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://the0xka1.cc/">
+    <meta property="og:image" content="https://the0xka1.cc/bg-dark.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#050505" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f7f7f3" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="./favicon.png">
     <script>
         (function () {
             try {
                 const savedTheme = localStorage.getItem("preferred-theme");
-                document.documentElement.dataset.theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : "dark";
+                const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+                document.documentElement.dataset.theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : systemTheme;
             } catch (error) {
                 document.documentElement.dataset.theme = "dark";
             }
         })();
     </script>
     <link rel="stylesheet" href="./css/modernAnti.css">
-    <link rel="stylesheet" href="./css/Zheng.css">
-    <link rel="stylesheet" href="./css/ZCOOL.css">
     <link rel="stylesheet" href="./css/GreatVibes.css">
     <style>
         :root {
@@ -32,10 +41,12 @@
             --bg-overlay: linear-gradient(180deg, rgba(5, 5, 5, 0.16), rgba(5, 5, 5, 0.84));
             --bg-filter: grayscale(1) contrast(1.18) brightness(0.38);
             --bg-opacity: 0.74;
-            --base-bg-image: url("./bg-dark.png");
-            --reveal-bg-image: url("./bg-light.png");
+            --base-bg-image: url("./bg-dark.webp");
+            --reveal-bg-image: url("./bg-light.webp");
             --cursor-x: 50vw;
             --cursor-y: 50vh;
+            --parallax-x: 0px;
+            --parallax-y: 0px;
             --reveal-size: clamp(140px, 16vw, 240px);
             --photo-filter: grayscale(1) contrast(1.18) brightness(0.9);
             --photo-shade:
@@ -44,11 +55,11 @@
             --card-bg: rgba(255, 255, 255, 0.025);
             --card-hover: rgba(255, 255, 255, 0.075);
             --shadow: 0 34px 120px rgba(0, 0, 0, 0.56);
-            --signature-stroke: #f7f7f3;
             --selection-bg: #f7f7f3;
             --selection-text: #050505;
             --ui-font: "Inter", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
             --display-font: "Modern Antiqua", "Cormorant Garamond", Georgia, serif;
+            --ease-out: cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         * {
@@ -83,13 +94,12 @@
             --bg-overlay: linear-gradient(180deg, rgba(247, 247, 243, 0.72), rgba(247, 247, 243, 0.96));
             --bg-filter: grayscale(1) contrast(1.02) brightness(1.28);
             --bg-opacity: 0.16;
-            --base-bg-image: url("./bg-light.png");
-            --reveal-bg-image: url("./bg-dark.png");
+            --base-bg-image: url("./bg-light.webp");
+            --reveal-bg-image: url("./bg-dark.webp");
             --photo-filter: grayscale(1) contrast(1.08) brightness(1.08);
             --card-bg: rgba(0, 0, 0, 0.025);
             --card-hover: rgba(0, 0, 0, 0.07);
             --shadow: 0 34px 120px rgba(0, 0, 0, 0.16);
-            --signature-stroke: #060606;
             --selection-bg: #060606;
             --selection-text: #f7f7f3;
         }
@@ -158,7 +168,7 @@
                 var(--reveal-bg-image) center / cover;
             clip-path: circle(var(--reveal-size) at var(--cursor-x) var(--cursor-y));
             opacity: 0;
-            transition: opacity 280ms ease, filter 280ms ease, clip-path 520ms cubic-bezier(0.19, 1, 0.22, 1);
+            transition: opacity 280ms ease, filter 280ms ease, clip-path 520ms var(--ease-out);
             will-change: clip-path;
         }
 
@@ -174,7 +184,7 @@
         body.card-collapsed.cursor-over-clickable .background-reveal {
             clip-path: circle(clamp(72px, 8vw, 124px) at var(--cursor-x) var(--cursor-y));
             opacity: 1;
-            transition: opacity 260ms ease, clip-path 560ms cubic-bezier(0.19, 1, 0.22, 1);
+            transition: opacity 260ms ease, clip-path 560ms var(--ease-out);
         }
 
         .theme-toggle,
@@ -194,6 +204,7 @@
             cursor: pointer;
             overflow: hidden;
             transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+            animation: fade-in 480ms ease 960ms backwards;
         }
 
         .theme-toggle {
@@ -208,7 +219,6 @@
         .theme-toggle:focus-visible,
         .view-toggle:hover,
         .view-toggle:focus-visible {
-            transform: translateY(-2px);
             border-color: var(--text);
             outline: none;
         }
@@ -245,7 +255,7 @@
             pointer-events: none;
             opacity: 0;
             transform: scale(0.92);
-            transition: opacity 360ms ease 80ms, transform 420ms cubic-bezier(0.19, 1, 0.22, 1) 80ms;
+            transition: opacity 360ms ease 80ms, transform 420ms var(--ease-out) 80ms;
             will-change: opacity, transform;
         }
 
@@ -279,8 +289,8 @@
             -webkit-backdrop-filter: blur(22px);
             box-shadow: var(--shadow);
             transition:
-                opacity 520ms cubic-bezier(0.19, 1, 0.22, 1),
-                transform 620ms cubic-bezier(0.19, 1, 0.22, 1),
+                opacity 520ms var(--ease-out),
+                transform 620ms var(--ease-out),
                 filter 520ms ease,
                 background 280ms ease,
                 border-color 280ms ease,
@@ -343,6 +353,8 @@
             height: 100%;
             object-fit: cover;
             filter: var(--photo-filter);
+            transform: translate3d(var(--parallax-x), var(--parallax-y), 0) scale(1.06);
+            will-change: transform;
             transition: filter 280ms ease;
         }
 
@@ -379,6 +391,7 @@
             flex-direction: column;
             justify-content: space-between;
             gap: 42px;
+            min-width: 0;
             padding: clamp(34px, 5vw, 68px);
         }
 
@@ -397,8 +410,13 @@
         .topline::after {
             width: min(150px, 24vw);
             height: 1px;
+            flex-shrink: 1;
             content: "";
             background: var(--line-strong);
+        }
+
+        .topline > span:first-child {
+            white-space: nowrap;
         }
 
         .hero {
@@ -422,17 +440,6 @@
             font-size: clamp(16px, 2vw, 19px);
             font-weight: 400;
             line-height: 1.84;
-        }
-
-        .signature {
-            width: min(100%, 430px);
-            margin: 44px 0 0;
-        }
-
-        .signature svg {
-            width: 100%;
-            height: auto;
-            overflow: visible;
         }
 
         .links {
@@ -461,11 +468,10 @@
         .link-card:focus-visible {
             border-color: var(--text);
             background: var(--card-hover);
-            transform: translateY(-2px);
             outline: none;
         }
 
-        .link-card span:first-child {
+        .link-card > span:first-child {
             position: relative;
             z-index: 1;
             font-family: var(--ui-font);
@@ -474,18 +480,40 @@
             text-transform: uppercase;
         }
 
-        .link-card span:last-child {
+        .link-icon {
             position: relative;
             z-index: 1;
             display: grid;
             width: 26px;
             height: 26px;
-            place-items: center;
             border: 1px solid currentColor;
             border-radius: 50%;
+            overflow: hidden;
             font-family: var(--ui-font);
             font-size: 13px;
             line-height: 1;
+        }
+
+        .link-icon-track {
+            display: grid;
+            grid-template-rows: 26px 26px;
+            transition: transform 340ms var(--ease-out);
+        }
+
+        .link-icon-track span {
+            display: grid;
+            place-items: center;
+        }
+
+        .link-icon-track svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        .link-card:hover .link-icon-track,
+        .link-card:focus-visible .link-icon-track,
+        .link-card.is-invert-target .link-icon-track {
+            transform: translateY(-26px);
         }
 
         .footer {
@@ -501,6 +529,102 @@
             letter-spacing: 0.1em;
         }
 
+        @keyframes shell-in {
+            from {
+                opacity: 0;
+                transform: scale(0.985) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @keyframes rise-in {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @keyframes clip-reveal {
+            from {
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        body:not(.card-collapsed) .shell {
+            animation: shell-in 680ms var(--ease-out) 40ms backwards;
+        }
+
+        body:not(.card-collapsed) .portrait-wrap {
+            animation: clip-reveal 860ms var(--ease-out) 220ms backwards;
+        }
+
+        body:not(.card-collapsed) .mark span {
+            animation: rise-in 560ms var(--ease-out) backwards;
+        }
+
+        body:not(.card-collapsed) .mark span:first-child {
+            animation-delay: 660ms;
+        }
+
+        body:not(.card-collapsed) .mark span:last-child {
+            animation-delay: 740ms;
+        }
+
+        body:not(.card-collapsed) .topline {
+            animation: rise-in 520ms var(--ease-out) 300ms backwards;
+        }
+
+        body:not(.card-collapsed) h1 {
+            animation: rise-in 560ms var(--ease-out) 380ms backwards;
+        }
+
+        body:not(.card-collapsed) .intro {
+            animation: rise-in 560ms var(--ease-out) 460ms backwards;
+        }
+
+        body:not(.card-collapsed) .link-card {
+            animation: rise-in 520ms var(--ease-out) backwards;
+        }
+
+        body:not(.card-collapsed) .link-card:nth-child(1) {
+            animation-delay: 600ms;
+        }
+
+        body:not(.card-collapsed) .link-card:nth-child(2) {
+            animation-delay: 660ms;
+        }
+
+        body:not(.card-collapsed) .link-card:nth-child(3) {
+            animation-delay: 720ms;
+        }
+
+        body:not(.card-collapsed) .link-card:nth-child(4) {
+            animation-delay: 780ms;
+        }
+
+        body:not(.card-collapsed) .footer {
+            animation: rise-in 520ms var(--ease-out) 860ms backwards;
+        }
+
         .cursor-invert {
             position: fixed;
             left: 0;
@@ -514,7 +638,7 @@
             pointer-events: none;
             opacity: 0;
             transform: translate3d(-50%, -50%, 0) scale(0.84);
-            transition: opacity 280ms ease, transform 420ms cubic-bezier(0.19, 1, 0.22, 1);
+            transition: opacity 280ms ease, transform 420ms var(--ease-out);
             will-change: transform;
         }
 
@@ -526,7 +650,13 @@
         body.cursor-over-clickable .cursor-invert {
             opacity: 0;
             transform: translate3d(-50%, -50%, 0) scale(0.46);
-            transition: opacity 420ms ease, transform 520ms cubic-bezier(0.19, 1, 0.22, 1);
+            transition: opacity 420ms ease, transform 520ms var(--ease-out);
+        }
+
+        body.cursor-in-card .cursor-invert {
+            opacity: 0;
+            transform: translate3d(-50%, -50%, 0) scale(0.6);
+            transition: opacity 320ms ease, transform 480ms var(--ease-out);
         }
 
         .cursor-label {
@@ -546,7 +676,7 @@
             pointer-events: none;
             opacity: 0;
             transform: translate3d(-50%, -50%, 0) scale(0.86);
-            transition: opacity 280ms ease, transform 420ms cubic-bezier(0.19, 1, 0.22, 1);
+            transition: opacity 280ms ease, transform 420ms var(--ease-out);
             will-change: left, top, opacity, transform;
         }
 
@@ -609,10 +739,6 @@
                 margin-top: 24px;
             }
 
-            .signature {
-                margin-top: 34px;
-            }
-
             .theme-toggle {
                 top: 18px;
                 right: 18px;
@@ -650,6 +776,10 @@
                 grid-template-columns: 1fr;
             }
 
+            .topline > span:first-child {
+                white-space: normal;
+            }
+
             .footer {
                 flex-direction: column;
                 align-items: flex-start;
@@ -670,6 +800,7 @@
                 scroll-behavior: auto !important;
                 transition-duration: 0.01ms !important;
                 animation-duration: 0.01ms !important;
+                animation-delay: 0.01ms !important;
                 animation-iteration-count: 1 !important;
             }
         }
@@ -707,39 +838,26 @@
                     <h1>The0xKa1</h1>
 
                     <p class="intro">
-                        Hello! I am The0xKa1, currently a sophomore at Zhejiang University, Turing Class. My major is Computer Science and Technology. I enjoy playing basketball, watching movies, and listening to music.
+                        Hello! I am The0xKa1, currently a sophomore at Zhejiang University, Turing Class, majoring in Computer Science and Technology. My current research focus is Computer Vision.
                     </p>
-
-                    <div class="signature" aria-hidden="true">
-                        <svg id="signature-anim" height="80" width="430" viewBox="0 0 430 80" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18,15 L5,15 L5,65 L18,65" stroke="var(--line-strong)" stroke-width="1.5" fill="none" stroke-linecap="square" />
-                            <path d="M412,15 L425,15 L425,65 L412,65" stroke="var(--line-strong)" stroke-width="1.5" fill="none" stroke-linecap="square" />
-                            <path d="M28,40 L58,40 L70,20 L82,60 L94,40 L132,40 L144,10 L156,70 L168,40 L214,40 L226,25 L238,55 L250,40 L310,40 L322,5 L334,75 L346,40 L402,40"
-                                  stroke="var(--signature-stroke)"
-                                  stroke-width="2.6"
-                                  fill="none"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round" />
-                        </svg>
-                    </div>
                 </div>
 
                 <nav class="links" aria-label="Profile links">
                     <a href="https://note.the0xka1.cc/" target="_blank" rel="noopener noreferrer" class="link-card">
                         <span>Note</span>
-                        <span aria-hidden="true">N</span>
+                        <span class="link-icon" aria-hidden="true"><span class="link-icon-track"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><span>↗</span></span></span>
                     </a>
                     <a href="https://github.com/The0xKa1" target="_blank" rel="noopener noreferrer" class="link-card">
                         <span>GitHub</span>
-                        <span aria-hidden="true">G</span>
+                        <span class="link-icon" aria-hidden="true"><span class="link-icon-track"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span><span>↗</span></span></span>
                     </a>
                     <a href="https://space.bilibili.com/398610279" target="_blank" rel="noopener noreferrer" class="link-card">
                         <span>Bilibili</span>
-                        <span aria-hidden="true">B</span>
+                        <span class="link-icon" aria-hidden="true"><span class="link-icon-track"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M17 2l-5 5-5-5"/></svg></span><span>↗</span></span></span>
                     </a>
                     <a href="mailto:zhangjinkai.me@gmail.com" class="link-card">
                         <span>Email</span>
-                        <span aria-hidden="true">@</span>
+                        <span class="link-icon" aria-hidden="true"><span class="link-icon-track"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg></span><span>↗</span></span></span>
                     </a>
                 </nav>
 
@@ -759,8 +877,12 @@
             const viewToggle = document.querySelector(".view-toggle");
             const cursor = document.querySelector(".cursor-invert");
             const savedTheme = localStorage.getItem("preferred-theme");
-            const initialTheme = root.dataset.theme || (savedTheme === "light" || savedTheme === "dark" ? savedTheme : "dark");
+            const systemTheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+            const initialTheme = root.dataset.theme || (savedTheme === "light" || savedTheme === "dark" ? savedTheme : systemTheme);
             const savedCardState = localStorage.getItem("card-collapsed");
+            const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+            const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
             let targetX = window.innerWidth / 2;
             let targetY = window.innerHeight / 2;
             let currentX = targetX;
@@ -790,11 +912,39 @@
                 setCardCollapsed(!body.classList.contains("card-collapsed"));
             });
 
-            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+            function renderCursor() {
+                currentX += (targetX - currentX) * 0.16;
+                currentY += (targetY - currentY) * 0.16;
+                root.style.setProperty("--cursor-x", currentX + "px");
+                root.style.setProperty("--cursor-y", currentY + "px");
+                if (!reducedMotion) {
+                    root.style.setProperty("--parallax-x", ((currentX / window.innerWidth - 0.5) * 12).toFixed(2) + "px");
+                    root.style.setProperty("--parallax-y", ((currentY / window.innerHeight - 0.5) * 10).toFixed(2) + "px");
+                }
+                cursor.style.left = currentX + "px";
+                cursor.style.top = currentY + "px";
+                requestAnimationFrame(renderCursor);
+            }
+
+            function addMagnetic(el, strength, limit) {
+                el.addEventListener("pointermove", function (event) {
+                    if (event.pointerType !== "mouse") return;
+                    const rect = el.getBoundingClientRect();
+                    const dx = (event.clientX - (rect.left + rect.width / 2)) * strength;
+                    const dy = (event.clientY - (rect.top + rect.height / 2)) * strength;
+                    el.style.transform = "translate(" + Math.max(-limit, Math.min(limit, dx)).toFixed(1) + "px, " + Math.max(-limit, Math.min(limit, dy)).toFixed(1) + "px)";
+                });
+                el.addEventListener("pointerleave", function () {
+                    el.style.transform = "";
+                });
+            }
+
+            if (finePointer) {
                 window.addEventListener("pointermove", function (event) {
                     targetX = event.clientX;
                     targetY = event.clientY;
                     body.classList.add("cursor-ready");
+                    body.classList.toggle("cursor-in-card", !!event.target.closest(".shell"));
 
                     const nextTarget = event.target.closest("a, button");
 
@@ -817,22 +967,33 @@
                 window.addEventListener("pointerleave", function () {
                     body.classList.remove("cursor-ready");
                     body.classList.remove("cursor-over-clickable");
+                    body.classList.remove("cursor-in-card");
                     if (activeTarget) {
                         activeTarget.classList.remove("is-invert-target");
                         activeTarget = null;
                     }
                 });
 
-                function renderCursor() {
-                    currentX += (targetX - currentX) * 0.16;
-                    currentY += (targetY - currentY) * 0.16;
-                    root.style.setProperty("--cursor-x", currentX + "px");
-                    root.style.setProperty("--cursor-y", currentY + "px");
-                    cursor.style.left = currentX + "px";
-                    cursor.style.top = currentY + "px";
-                    requestAnimationFrame(renderCursor);
+                if (!reducedMotion) {
+                    document.querySelectorAll(".theme-toggle, .view-toggle").forEach(function (el) {
+                        addMagnetic(el, 0.3, 8);
+                    });
+                    document.querySelectorAll(".link-card").forEach(function (el) {
+                        addMagnetic(el, 0.12, 5);
+                    });
                 }
 
+                renderCursor();
+            } else if (coarsePointer) {
+                const trackTouch = function (event) {
+                    if (event.pointerType === "mouse") return;
+                    targetX = event.clientX;
+                    targetY = event.clientY;
+                    body.classList.add("cursor-ready");
+                };
+
+                window.addEventListener("pointerdown", trackTouch);
+                window.addEventListener("pointermove", trackTouch);
                 renderCursor();
             }
         })();
