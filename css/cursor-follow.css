@@ -1,0 +1,44 @@
+/* The dot is the exact hotspot; the thin ring follows with a little delay. */
+:root { --layer-cursor: 20; }
+.cursor-layer {
+    position: fixed;
+    inset: 0;
+    z-index: var(--layer-cursor);
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+    color: var(--black);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 120ms ease, visibility 120ms;
+}
+.cursor-layer.is-visible { visibility: visible; opacity: 1; }
+.cursor-layer.on-media { color: var(--white); }
+.cursor-dot,
+.cursor-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    pointer-events: none;
+}
+.cursor-dot {
+    width: 4px;
+    height: 4px;
+    margin: -2px 0 0 -2px;
+    background: currentColor;
+}
+.cursor-ring {
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 1px solid currentColor;
+    opacity: 0.48;
+}
+.cursor-layer.on-media .cursor-dot { box-shadow: 0 0 1px rgb(0 0 0 / 0.5); }
+.cursor-layer.on-media .cursor-ring { opacity: 0.8; box-shadow: 0 0 1px rgb(0 0 0 / 0.25); }
+html.has-custom-cursor,
+html.has-custom-cursor * { cursor: none !important; }
+@media (prefers-reduced-motion: reduce), (forced-colors: active), print {
+    .cursor-layer { display: none; }
+}
