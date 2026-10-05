@@ -16,16 +16,17 @@ function events(extra = {}) {
     });
 }
 
-function target({ link = false, ocean = false, input = false, media = '' } = {}) {
+function target({ link = false, ocean = false, input = false, media = '', disabled = false } = {}) {
     return {
         tagName: media,
         getBoundingClientRect: () => ({ bottom: 500 }),
         closest(selector) {
             if (selector.startsWith('input,')) return input ? this : null;
             if (selector.startsWith('video[')) return media ? this : null;
-            if (selector === '.ocean-interaction') return ocean ? this : null;
-            if (selector === '.profile-artwork, .project-media') return ocean || media ? this : null;
-            return link || ocean ? this : null;
+            if (selector === '.profile-artwork') return ocean ? this : null;
+            if (selector === '.project-media') return media ? this : null;
+            if (selector.startsWith('a[href]')) return (link || ocean) && !disabled ? this : null;
+            return null;
         }
     };
 }
@@ -69,14 +70,13 @@ function page({ fine = true, reduced = false, forced = false } = {}) {
     vm.runInContext(source, context);
     const layer = nodes.find(node => node.className === 'cursor-layer');
     const dot = nodes.find(node => node.className === 'cursor-dot');
-    const ring = nodes.find(node => node.className === 'cursor-ring');
     function emit(type, x = 200, y = 200, element = target(), extra = {}) {
         const event = { clientX: x, clientY: y, target: element, pointerType: 'mouse', button: 0, buttons: 0, ...extra };
         document.emit(type, event);
         return event;
     }
     return {
-        document, window, root, layer, dot, ring, preferences, nodes, emit,
+        document, window, root, layer, dot, preferences, nodes, emit,
         get visible() { return layer.classList.contains('is-visible'); },
         get nativeCursor() { return !root.classList.contains('has-custom-cursor'); },
         get pending() { return queue.size; },
@@ -92,23 +92,20 @@ function page({ fine = true, reduced = false, forced = false } = {}) {
     };
 }
 
-test('dot tracks the exact pointer immediately while the ring trails and converges across the page', () => {
+test('one dot tracks the pointer exactly and morphs only on enabled clickable content', () => {
     const p = page();
-    for (const element of [target(), target({ link: true }), target({ media: 'VIDEO' }), target({ ocean: true })]) {
+    for (const [element, hover] of [[target(), false], [target({ link: true }), true], [target({ media: 'VIDEO' }), false], [target({ link: true, disabled: true }), false]]) {
         p.emit('pointermove', 650, 220, element);
-        p.advance();
         assert.equal(p.visible, true);
         assert.equal(p.nativeCursor, false);
+        assert.equal(p.layer.classList.contains('is-hovering'), hover);
         assert.equal(p.dot.style.transform, 'translate3d(650px, 220px, 0)');
     }
     p.emit('pointermove', 900, 350);
     assert.equal(p.dot.style.transform, 'translate3d(900px, 350px, 0)');
-    p.advance();
-    const ringX = Number(p.ring.style.transform.split('(')[1].split('px')[0]);
-    assert.ok(ringX > 650 && ringX < 900, 'ring follows with delay instead of snapping');
-    p.advance(240);
     assert.equal(p.pending, 0);
-    assert.equal(p.ring.style.transform, 'translate3d(900px, 350px, 0) scale(1)');
+    assert.equal(p.layer.children.length, 1);
+    assert.equal(p.layer.children[0], p.dot);
     assert.equal(p.nodes.filter(node => node.className === 'cursor-layer').length, 1);
 });
 
@@ -118,9 +115,9 @@ test('press feedback leaves click events intact and releases native cursor for d
     p.document.addEventListener('click', () => clicks++);
     p.emit('pointermove');
     p.emit('pointerdown', 200, 200, target(), { buttons: 1 });
-    p.advance(6);
-    assert.ok(Number(p.ring.style.transform.split('scale(')[1].split(')')[0]) < 1);
+    assert.equal(p.layer.classList.contains('is-pressed'), true);
     p.emit('pointerup');
+    assert.equal(p.layer.classList.contains('is-pressed'), false);
     p.emit('click');
     assert.equal(clicks, 1);
     p.emit('pointerdown', 200, 200, target(), { buttons: 1 });
@@ -193,16 +190,41 @@ test('scrolling under a stationary pointer rechecks the actual target', () => {
     assert.equal(p.nativeCursor, true);
 });
 
-test('links expand the ring and media switch to white without enlarging the ocean interaction surface', () => {
+test('ocean hides both cursors while preserving clicks, and leaving restores the single dot', () => {
     const p = page();
     p.emit('pointermove', 200, 200, target({ link: true }));
-    p.advance(240);
-    assert.equal(p.ring.style.transform, 'translate3d(200px, 200px, 0) scale(1.4)');
-    assert.equal(p.layer.classList.contains('on-media'), false);
+    assert.equal(p.layer.classList.contains('is-hovering'), true);
     p.emit('pointermove', 200, 200, target({ ocean: true }));
-    p.advance(240);
+    assert.equal(p.visible, false);
+    assert.equal(p.nativeCursor, false);
+    assert.equal(p.layer.classList.contains('is-hovering'), false);
+    let clicks = 0;
+    p.document.addEventListener('click', () => clicks++);
+    p.emit('pointerdown', 200, 200, target({ ocean: true }), { buttons: 1 });
+    p.emit('pointerup', 200, 200, target({ ocean: true }));
+    p.emit('click', 200, 200, target({ ocean: true }));
+    assert.equal(clicks, 1);
+    assert.equal(p.visible, false);
+    p.emit('pointermove', 300, 220);
+    assert.equal(p.visible, true);
+    assert.equal(p.layer.classList.contains('is-hovering'), false);
+    assert.equal(p.dot.style.transform, 'translate3d(300px, 220px, 0)');
+    p.emit('pointermove', 300, 220, target({ media: 'VIDEO' }));
     assert.equal(p.layer.classList.contains('on-media'), true);
-    assert.equal(p.ring.style.transform, 'translate3d(200px, 200px, 0) scale(1)');
+});
+
+test('scrolling the ocean under and away from a stationary pointer updates visibility in both directions', () => {
+    const p = page();
     p.emit('pointermove');
-    assert.equal(p.layer.classList.contains('on-media'), false);
+    p.hit = target({ ocean: true });
+    p.document.emit('scroll');
+    p.advance();
+    assert.equal(p.visible, false);
+    assert.equal(p.nativeCursor, false);
+    p.hit = target({ link: true });
+    p.document.emit('scroll');
+    p.advance();
+    assert.equal(p.visible, true);
+    assert.equal(p.layer.classList.contains('is-hovering'), true);
+    assert.equal(p.pending, 0);
 });
