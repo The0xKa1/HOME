@@ -1,0 +1,32 @@
+@font-face {
+    font-family: "Cormorant Garamond";
+    font-style: normal;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url("../fonts/cormorant-garamond-latin.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url("../fonts/dm-sans-latin.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Shantell Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/shantell-sans-regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "LXGW WenKai";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/lxgw-wenkai-name.woff2") format("woff2");
+    unicode-range: U+0028-0029, U+5F20, U+607A, U+664B;
+}
