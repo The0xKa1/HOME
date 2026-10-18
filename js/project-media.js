@@ -2,6 +2,18 @@
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const players = new Map();
 
+    document.querySelectorAll('[data-video-preview]').forEach(video => {
+        function syncMotionPreference() {
+            if (reducedMotion.matches) {
+                video.pause();
+            } else {
+                video.play().catch(() => {});
+            }
+        }
+        reducedMotion.addEventListener('change', syncMotionPreference);
+        syncMotionPreference();
+    });
+
     document.querySelectorAll('[data-gif-player]').forEach(player => {
         const image = player.querySelector('img');
         const source = player.querySelector('source');
