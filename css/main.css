@@ -298,6 +298,7 @@ h2 { font-size: clamp(36px, 4vw, 56px); line-height: 1.08; letter-spacing: -0.03
     color: var(--klein-blue);
     font-size: 12px;
 }
+.project-links { display: flex; flex-wrap: wrap; gap: 10px; }
 .project-link .icon { width: 12px; height: 12px; }
 .project-link:hover { color: var(--white); background: var(--klein-blue); }
 

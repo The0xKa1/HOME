@@ -31,6 +31,7 @@ Jinkai Zhang（张晋恺 / The0xKa1）的个人主页，界面采用白、黑和
 
 - 科研：[SuperNav](https://zju3dv.github.io/SuperNav/)，使用官网 overview 视频，静音自动循环播放，提供手机与桌面两种清晰度。
 - 兴趣：[KINE-X](https://github.com/The0xKa1/KINE-X)，两段原速 GIF 可在同一卡片中切换。
+- 兴趣：[monopoly](https://monopoly.the0xka1.cc/)，10秒像素城市大富翁演示，包含掷骰购城、选卡翻面与地图洗牌；提供在线游玩和 [GitHub](https://github.com/The0xKa1/monopoly) 入口。视频静音循环，保留播放控制；减少动态效果时默认暂停，无 JavaScript 时显示封面并可手动播放。
 - 兴趣：弦间，使用同步展示视频、谱面与三维指法的 GIF。
 
 视频和 GIF 保留完整构图、原色和原始文件，不添加调色滤镜或色彩蒙层。

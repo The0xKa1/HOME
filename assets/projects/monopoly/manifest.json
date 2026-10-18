@@ -1,0 +1,38 @@
+{
+  "title": "monopoly — website demo",
+  "date": "2026-10-18",
+  "duration": 10,
+  "width": 1920,
+  "height": 1080,
+  "fps": 25,
+  "audio": false,
+  "source": "Local application captured in isolated Chrome contexts via scripts/record-demo.mjs; edit via scripts/render-demo.mjs and FFmpeg.",
+  "license": "Project-original game UI, pixel assets and animation. ZCOOL KuaiLe font: SIL OFL; Lucide icons: ISC. No external footage or soundtrack.",
+  "reference": "https://the0xka1.cc/ — 16:9 muted autoplay project previews",
+  "shots": [
+    {
+      "name": "lobby",
+      "duration": 1
+    },
+    {
+      "name": "purchase",
+      "duration": 4
+    },
+    {
+      "name": "event",
+      "duration": 5
+    }
+  ],
+  "files": [
+    {
+      "name": "monopoly-demo.mp4",
+      "bytes": 2547518,
+      "sha256": "7b5205e75bb7b39288b0a887fca537eaf24db5a7a7feeabc49f1218fa086854c"
+    },
+    {
+      "name": "monopoly-demo-poster.webp",
+      "bytes": 67632,
+      "sha256": "39d571cd3054994a313f4e60900630d401e8669e41f5d25ce057bf01e488f439"
+    }
+  ]
+}
