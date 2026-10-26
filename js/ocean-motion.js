@@ -206,6 +206,13 @@
 
     function sync() {
         stop();
+        if (document.documentElement?.getAttribute('data-theme') === 'dark') {
+            artwork.classList.remove('ocean-running');
+            button.hidden = interaction.hidden = true;
+            resetPointer();
+            ripples.length = 0;
+            return;
+        }
         if (failed || !image.complete || !image.naturalWidth) return;
         artwork.classList.toggle('ocean-running', !reducedMotion.matches);
         button.hidden = reducedMotion.matches;
@@ -245,6 +252,7 @@
     });
     image.addEventListener('load', sync, { once: true });
     reducedMotion.addEventListener('change', sync);
+    document.addEventListener('themechange', sync);
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) resetPointer();
         sync();

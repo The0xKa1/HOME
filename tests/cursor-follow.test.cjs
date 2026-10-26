@@ -45,6 +45,7 @@ function page({ fine = true, reduced = false, forced = false } = {}) {
             },
             style: { setProperty(name, value) { this[name] = value; } },
             setAttribute(name, value) { this[name === 'class' ? 'className' : name] = value; },
+            getAttribute(name) { return this[name] ?? null; },
             append(...children) { this.children.push(...children); }
         };
         nodes.push(node);
@@ -57,6 +58,7 @@ function page({ fine = true, reduced = false, forced = false } = {}) {
     const document = events({
         documentElement: root, body: element('body'), hidden: false,
         createElement: element,
+        createElementNS: (namespace, tagName) => element(tagName),
         elementFromPoint: () => hit
     });
     const window = events({
@@ -69,14 +71,16 @@ function page({ fine = true, reduced = false, forced = false } = {}) {
     });
     vm.runInContext(source, context);
     const layer = nodes.find(node => node.className === 'cursor-layer');
+    const trail = nodes.find(node => node.className === 'cursor-trail');
+    const trailCore = nodes.find(node => node.className === 'cursor-trail-core');
     const dot = nodes.find(node => node.className === 'cursor-dot');
     function emit(type, x = 200, y = 200, element = target(), extra = {}) {
-        const event = { clientX: x, clientY: y, target: element, pointerType: 'mouse', button: 0, buttons: 0, ...extra };
+        const event = { clientX: x, clientY: y, target: element, pointerType: 'mouse', button: 0, buttons: 0, timeStamp: time, ...extra };
         document.emit(type, event);
         return event;
     }
     return {
-        document, window, root, layer, dot, preferences, nodes, emit,
+        document, window, root, layer, trail, trailCore, dot, preferences, nodes, emit,
         get visible() { return layer.classList.contains('is-visible'); },
         get nativeCursor() { return !root.classList.contains('has-custom-cursor'); },
         get pending() { return queue.size; },
@@ -104,9 +108,11 @@ test('one dot tracks the pointer exactly and morphs only on enabled clickable co
     p.emit('pointermove', 900, 350);
     assert.equal(p.dot.style.transform, 'translate3d(900px, 350px, 0)');
     assert.equal(p.pending, 0);
-    assert.equal(p.layer.children.length, 1);
-    assert.equal(p.layer.children[0], p.dot);
+    assert.equal(p.layer.children.length, 2);
+    assert.equal(p.layer.children[0], p.trail);
+    assert.equal(p.layer.children[1], p.dot);
     assert.equal(p.nodes.filter(node => node.className === 'cursor-layer').length, 1);
+    assert.equal(p.nodes.filter(node => node.className === 'cursor-dot').length, 1);
 });
 
 test('press feedback leaves click events intact and releases native cursor for dragging and selection', () => {
@@ -226,5 +232,101 @@ test('scrolling the ocean under and away from a stationary pointer updates visib
     p.advance();
     assert.equal(p.visible, true);
     assert.equal(p.layer.classList.contains('is-hovering'), true);
+    assert.equal(p.pending, 0);
+});
+
+test('dark artwork draws a meteor trail and restores the dot on exit', () => {
+    const p = page();
+    p.root.setAttribute('data-theme', 'dark');
+    p.emit('pointermove', 650, 220, target({ ocean: true }));
+    assert.equal(p.visible, true);
+    assert.equal(p.layer.classList.contains('is-meteor'), true);
+    assert.equal(p.layer.classList.contains('is-hovering'), false);
+    assert.equal(p.trail.getAttribute('opacity'), '0.000');
+    assert.equal(p.trailCore.getAttribute('d'), '');
+    assert.equal(p.pending, 0);
+    p.emit('pointermove', 660, 230, target({ ocean: true }));
+    p.advance();
+    assert.equal(p.trailCore.getAttribute('d'), 'M 650 220 L 660 230');
+    assert(Number(p.trail.getAttribute('opacity')) > 0);
+    assert.equal(p.dot.style.transform, 'translate3d(660px, 230px, 0)');
+    const beforeExit = Number(p.trail.getAttribute('opacity'));
+    p.emit('pointermove', 600, 230, target());
+    assert.equal(p.layer.classList.contains('is-meteor'), false);
+    assert.equal(p.visible, true);
+    assert.equal(Number(p.trail.getAttribute('opacity')), beforeExit);
+    p.advance(6);
+    assert(Number(p.trail.getAttribute('opacity')) > 0);
+    assert(Number(p.trail.getAttribute('opacity')) < beforeExit);
+    assert.notEqual(p.trailCore.getAttribute('d'), '');
+    p.advance(60);
+    assert.equal(p.trail.getAttribute('opacity'), '0.000');
+    assert.equal(p.trailCore.getAttribute('d'), '');
+    assert.equal(p.pending, 0);
+    p.emit('pointermove', 660, 230, target({ ocean: true }));
+    p.document.emit('themechange');
+    assert.equal(p.layer.classList.contains('is-meteor'), false);
+    assert.equal(p.nativeCursor, true);
+});
+
+test('meteor trail curves through the actual pointer history', () => {
+    const p = page();
+    p.root.setAttribute('data-theme', 'dark');
+    p.emit('pointermove', 100, 100, target({ ocean: true }));
+    p.emit('pointermove', 140, 100, target({ ocean: true }));
+    p.advance();
+    p.emit('pointermove', 140, 140, target({ ocean: true }));
+    p.advance();
+    p.emit('pointermove', 180, 140, target({ ocean: true }));
+    p.advance();
+    const path = p.trailCore.getAttribute('d');
+    assert(path.includes(' C '), 'multiple trajectory points produce a smooth curve');
+    assert(path.includes('140 100'), 'the path retains the horizontal segment');
+    assert(path.includes('140 140'), 'the path passes through the turning point');
+    assert(path.endsWith('180 140'), 'the path ends at the current pointer');
+});
+
+test('meteor trail retracts along its path, fades and stops scheduling frames', () => {
+    const p = page();
+    p.root.setAttribute('data-theme', 'dark');
+    p.emit('pointermove', 100, 100, target({ ocean: true }));
+    for (let step = 1; step <= 6; step++) {
+        p.emit('pointermove', 100 + step * 10, 100, target({ ocean: true }));
+        p.advance();
+    }
+    const fullPath = p.trailCore.getAttribute('d');
+    p.advance(32);
+    const retractedPath = p.trailCore.getAttribute('d');
+    assert.notEqual(retractedPath, fullPath);
+    assert.notEqual(retractedPath, '');
+    assert(Number(p.trail.getAttribute('opacity')) > 0);
+    const beforeExpiry = Number(p.trail.getAttribute('opacity'));
+    p.advance(8);
+    assert.notEqual(p.trailCore.getAttribute('d'), '', 'expired history remains drawn while fading');
+    assert(Number(p.trail.getAttribute('opacity')) > 0);
+    assert(Number(p.trail.getAttribute('opacity')) < beforeExpiry);
+    p.advance(60);
+    assert.equal(p.trailCore.getAttribute('d'), '');
+    assert.equal(p.trail.getAttribute('opacity'), '0.000');
+    assert.equal(p.pending, 0);
+});
+
+test('continuous motion keeps the trajectory bright and bounded', () => {
+    const p = page();
+    p.root.setAttribute('data-theme', 'dark');
+    p.emit('pointermove', 100, 100, target({ ocean: true }));
+    for (let step = 1; step <= 24; step++) {
+        p.emit('pointermove', 100 + step * 16, 100, target({ ocean: true }), { timeStamp: step * 1000 / 60 });
+        p.advance();
+    }
+    const path = p.trailCore.getAttribute('d');
+    const segments = (path.match(/ C /g) || []).length;
+    assert(segments > 4);
+    assert(segments < 24, 'the trail keeps only the most recent trajectory');
+    assert(Number(p.trail.getAttribute('opacity')) > 0.95);
+    assert(path.endsWith('484 100'));
+    p.advance(120);
+    assert.equal(p.trailCore.getAttribute('d'), '');
+    assert.equal(p.trail.getAttribute('opacity'), '0.000');
     assert.equal(p.pending, 0);
 });
