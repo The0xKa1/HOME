@@ -171,3 +171,18 @@ if (process.env.OCEAN_RENDER_FIXTURES) {
         fs.writeFileSync(path.join(dir, shader.type === 0x8B31 ? 'ocean.vert' : 'ocean.frag'), shader.text);
     }
 }
+
+test('dark mode stops ocean rendering and light mode resumes it', () => {
+    const o = createOcean();
+    let theme = 'dark';
+    o.document.documentElement = { getAttribute: () => theme };
+    o.document.emit('themechange');
+    assert.equal(o.queue.size, 0);
+    assert.equal(o.button.hidden, true);
+    assert.equal(o.interaction.hidden, true);
+    assert.equal(o.classes.has('ocean-running'), false);
+    theme = 'light';
+    o.document.emit('themechange');
+    assert.equal(o.queue.size, 1);
+    assert.equal(o.button.hidden, false);
+});

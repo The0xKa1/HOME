@@ -7,13 +7,13 @@
     overflow: hidden;
     pointer-events: none;
     user-select: none;
-    color: var(--black);
+    color: var(--text);
     visibility: hidden;
     opacity: 0;
     transition: opacity 120ms ease, visibility 120ms;
 }
 .cursor-layer.is-visible { visibility: visible; opacity: 1; }
-.cursor-layer.on-media { color: var(--white); }
+.cursor-layer.on-media { color: #FFFFFF; }
 .cursor-dot {
     position: absolute;
     top: 0;
@@ -42,6 +42,44 @@
 .cursor-layer.is-pressed .cursor-dot { width: 3px; height: 3px; margin: -1.5px 0 0 -1.5px; }
 .cursor-layer.is-hovering.is-pressed .cursor-dot { width: 24px; height: 24px; margin: -12px 0 0 -12px; }
 .cursor-layer.on-media .cursor-dot { box-shadow: 0 0 1px rgb(0 0 0 / 0.4); }
+.cursor-layer.is-meteor .cursor-dot {
+    width: 3px;
+    height: 3px;
+    margin: -1.5px 0 0 -1.5px;
+    color: #DCE2EC;
+    background: currentColor;
+    border-color: transparent;
+    box-shadow:
+        0 0 3px rgb(222 232 246 / 40%),
+        0 0 7px rgb(170 190 220 / 12%);
+    mix-blend-mode: screen;
+}
+.cursor-trail {
+    display: block;
+    mix-blend-mode: screen;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    will-change: opacity;
+}
+.cursor-trail-glow,
+.cursor-trail-core {
+    fill: none;
+    stroke: url(#cursor-meteor-gradient);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.cursor-trail-glow {
+    stroke-width: 5;
+    opacity: 0.14;
+    filter: blur(1.5px);
+}
+.cursor-trail-core {
+    stroke-width: 1.2;
+}
 html.has-custom-cursor,
 html.has-custom-cursor * { cursor: none !important; }
 @media (prefers-reduced-motion: reduce), (forced-colors: active), print {

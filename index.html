@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light">
+    <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#FFFFFF">
     <meta name="description" content="Jinkai Zhang — Zhejiang University Turing Class. Research intern at ZJU3DV, focusing on embodied intelligence.">
     <title>Jinkai Zhang — The0xKa1</title>
+    <script src="./js/theme.js"></script>
     <link rel="icon" type="image/png" sizes="64x64" href="./favicon.png">
     <link rel="preload" href="./fonts/cormorant-garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="./fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -17,9 +18,14 @@
     <script src="./js/scroll-reveal.js" defer></script>
     <script src="./js/project-media.js" defer></script>
     <script src="./js/ocean-motion.js" defer></script>
+    <script src="./js/star-dust.js" defer></script>
     <script src="./js/cursor-follow.js" defer></script>
 </head>
 <body id="top">
+    <button class="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" hidden>
+        <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg>
+        <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+    </button>
     <a class="skip-link" href="#main">Skip to content</a>
     <main class="page" id="main">
         <section class="profile" aria-labelledby="profile-name">
@@ -36,6 +42,9 @@
             </header>
 
             <div class="profile-artwork">
+                <div class="night-artwork">
+                    <button class="night-interaction" type="button" aria-label="Create a little stardust" hidden></button>
+                </div>
                 <img
                     class="ocean"
                     src="./assets/images/klein-blue-ocean-v2.png"
